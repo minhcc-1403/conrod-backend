@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationDto } from 'common/dto/pagination.dto';
+import { DefaultPageSize } from 'common/util/common.constants';
 import { Repository } from 'typeorm';
 import { User } from 'users/entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,8 +19,13 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  findAll() {
-    return this.usersRepository.find();
+  findAll(paginationDto: PaginationDto) {
+    const { limit, offset } = paginationDto;
+
+    return this.usersRepository.find({
+      skip: offset,
+      take: limit ?? DefaultPageSize.USERS,
+    });
   }
 
   async findOne(id: number) {
