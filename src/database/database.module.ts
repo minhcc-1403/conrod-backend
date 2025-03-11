@@ -1,19 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as dotenv from 'dotenv';
-import * as dotenvExpand from 'dotenv-expand';
-
-dotenvExpand.expand(dotenv.config());
+import databaseConfig from 'database/config/database.config';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRootAsync({
-      useFactory: () => ({
-        type: 'postgres',
-        url: process.env.DATABASE_URL,
-        autoLoadEntities: true,
-      }),
-    }),
-  ],
+  imports: [TypeOrmModule.forRootAsync(databaseConfig.asProvider())],
 })
 export class DatabaseModule {}
