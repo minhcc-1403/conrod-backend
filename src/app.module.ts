@@ -1,14 +1,22 @@
 import { Module } from '@nestjs/common';
+import { PaymentsModule } from 'payments/payments.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './domain/users/users.module';
 import { CommonModule } from './common/common.module';
 import { DatabaseModule } from './database/database.module';
-import { EnvModule } from './env/env.module';
 import { OrdersModule } from './domain/orders/orders.module';
+import { UsersModule } from './domain/users/users.module';
+import { EnvModule } from './env/env.module';
 
 @Module({
-  imports: [UsersModule, CommonModule, DatabaseModule, EnvModule, OrdersModule],
+  imports: [
+    UsersModule,
+    CommonModule,
+    DatabaseModule,
+    EnvModule,
+    OrdersModule,
+    PaymentsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
