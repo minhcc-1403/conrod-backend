@@ -15,8 +15,8 @@ export class OrdersService {
   ) {}
 
   create(createOrderDto: CreateOrderDto) {
-    const user = this.ordersRepository.create(createOrderDto);
-    return this.ordersRepository.save(user);
+    const order = this.ordersRepository.create(createOrderDto);
+    return this.ordersRepository.save(order);
   }
 
   findAll(paginationDto: PaginationDto) {
@@ -29,26 +29,29 @@ export class OrdersService {
   }
 
   async findOne(id: number) {
-    const user = await this.ordersRepository.findOneBy({ id });
-    if (!user) {
-      throw new NotFoundException('User not found');
+    const order = await this.ordersRepository.findOne({
+      where: { id },
+      relations: { customer: true },
+    });
+    if (!order) {
+      throw new NotFoundException('Order not found');
     }
-    return user;
+    return order;
   }
 
   async update(id: number, updateOrderDto: UpdateOrderDto) {
-    const user = await this.ordersRepository.preload({
+    const order = await this.ordersRepository.preload({
       id,
       ...updateOrderDto,
     });
-    if (!user) {
-      throw new NotFoundException('User not found');
+    if (!order) {
+      throw new NotFoundException('Order not found');
     }
-    return this.ordersRepository.save(user);
+    return this.ordersRepository.save(order);
   }
 
   async remove(id: number) {
-    const user = await this.findOne(id);
-    return this.ordersRepository.remove(user);
+    const order = await this.findOne(id);
+    return this.ordersRepository.remove(order);
   }
 }
